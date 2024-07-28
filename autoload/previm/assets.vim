@@ -114,24 +114,24 @@ let s:source_map = [
 \      },
 \    ],
 \  },
-\  {
-\    'name': 'mermaid',
-\    'files': [
-\      {
-\        'type': 'js',
-\        'path': '_/js/lib/mermaid.min.js',
-\        'url': 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
-\        'code': [
-\          'mermaid.initialize({startOnLoad: false});',
-\          'mermaid.run();',
-\          'Array.prototype.forEach.call(',
-\          '  _doc.querySelectorAll(''.mermaid > svg'')',
-\          ', (mermaidImage) => mermaidImage.removeAttribute(''height'')',
-\          ');',
-\        ]
-\      },
-\    ],
-\  },
+"\  {
+"\    'name': 'mermaid',
+"\    'files': [
+"\      {
+"\        'type': 'js',
+"\        'path': '_/js/lib/mermaid.min.js',
+"\        'url': 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+"\        'code': [
+"\          'mermaid.initialize({startOnLoad: false});',
+"\          'mermaid.run();',
+"\          'Array.prototype.forEach.call(',
+"\          '  _doc.querySelectorAll(''.mermaid > svg'')',
+"\          ', (mermaidImage) => mermaidImage.removeAttribute(''height'')',
+"\          ');',
+"\        ]
+"\      },
+"\    ],
+"\  },
 \]
 
 let s:base_dir = expand('<sfile>:h:h:h') . '/preview'

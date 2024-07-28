@@ -1,8 +1,8 @@
 'use strict';
 
 (function(_doc, _win) {
-  const REFRESH_INTERVAL = 1000;
-  const md = new _win.markdownit({html: true, linkify: true})
+  var REFRESH_INTERVAL = 1000;
+  var md = new _win.markdownit({html: true, linkify: true})
                    .use(_win.markdownitAbbr)
                    .use(_win.markdownitDeflist)
                    .use(_win.markdownitFootnote)
@@ -11,19 +11,19 @@
                    .use(_win.markdownitCheckbox)
                    .use(_win.markdownitCjkBreaks);
 
-  const defaultRenderer =
+  var defaultRenderer =
     md.renderer.rules.link_open ||
     function (tokens, idx, options, _env, self) {
       return self.renderToken(tokens, idx, options);
     };
 
   md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-    const targetIndex = tokens[idx].attrIndex("target");
+    var targetIndex = tokens[idx].attrIndex("target");
     if (targetIndex < 0) {
       if (!/^#/.test(tokens[idx].attrs[0][1])) {
         tokens[idx].attrPush(["target", "_blank"]);
 
-        const relIndex = tokens[idx].attrIndex("rel");
+        var relIndex = tokens[idx].attrIndex("rel");
         if (relIndex < 0) {
           tokens[idx].attrPush(["rel", "noopener"]);
         } else {
@@ -36,18 +36,18 @@
   }
 
   // Override default 'fence' ruler for 'mermaid' support
-  const original_fence = md.renderer.rules.fence;
+  var original_fence = md.renderer.rules.fence;
   md.renderer.rules.fence = function fence(tokens, idx, options, env, slf) {
-    const token = tokens[idx];
-    const langName = token.info.trim().split(/\s+/g)[0];
+    var token = tokens[idx];
+    var langName = token.info.trim().split(/\s+/g)[0];
     if (langName === 'mermaid') {
       return '<div class="mermaid">' + token.content + '</div>';
     }
     // Settings code-lang 
-    const sep = new RegExp(getOptions().codeLanguageSeparator);
-    const tokenSplit = token.info.trim().split(sep);
-    const codeLangName = tokenSplit[0];
-    let fileName = '';
+    var sep = new RegExp(getOptions().codeLanguageSeparator);
+    var tokenSplit = token.info.trim().split(sep);
+    var codeLangName = tokenSplit[0];
+    var fileName = '';
     if (tokenSplit.length > 1) {
         fileName = tokenSplit.slice(1).join(' ');
     } else {
@@ -77,8 +77,8 @@
       }
       return md.render(content);
     } else if(hasTargetFileType(filetype, ['plantuml'])) {
-      const lines = content.split("\n")
-      const chunks = [];
+      var lines = content.split("\n")
+      var chunks = [];
       lines.forEach(function (line) {
         if (/^@start/.test(line)) {
           chunks.push(line);
@@ -86,7 +86,7 @@
           chunks[chunks.length - 1] += "\n" + line;
         }
       });
-      const plantumls = [];
+      var plantumls = [];
       chunks.forEach(function (chunk) {
         plantumls.push("```plantuml\n" + chunk + "```\n");
       });
@@ -108,8 +108,8 @@
   }
 
   function hasTargetFileType(filetype, targetList) {
-    const ftlist = filetype.split('.');
-    for(let i=0;i<ftlist.length; i++) {
+    var ftlist = filetype.split('.');
+    for(var i=0;i<ftlist.length; i++) {
       if(targetList.indexOf(ftlist[i]) > -1){
         return true;
       }
@@ -121,8 +121,8 @@
   //   ここで動的にpageYOffsetを取得すると画像表示前の高さになってしまう
   //   そのため明示的にpageYOffsetを受け取るようにしている
   function autoScroll(id, pageYOffset) {
-    const relaxed = 0.95;
-    const obj = document.getElementById(id);
+    var relaxed = 0.95;
+    var obj = document.getElementById(id);
     if((_doc.documentElement.clientHeight + pageYOffset) / _doc.body.clientHeight > relaxed) {
       obj.scrollTop = obj.scrollHeight;
     } else {
@@ -132,13 +132,13 @@
 
   function style_header() {
     if (typeof getOptions === 'function') {
-      const style = getOptions().showheader ? '' : 'none';
+      var style = getOptions().showheader ? '' : 'none';
       _doc.getElementById('header').style.display = style;
     }
   }
 
   function loadPreview() {
-    let needReload = false;
+    var needReload = false;
     // These functions are defined as the file generated dynamically.
     //   generator-file: preview/autoload/previm.vim
     //   generated-file: preview/js/previm-function.js
@@ -161,7 +161,7 @@
     if (needReload && (typeof getContent === 'function') && (typeof getFileType === 'function')) {
       {{previm_init_libraries}}
 
-      const beforePageYOffset = _win.pageYOffset;
+      var beforePageYOffset = _win.pageYOffset;
       _doc.getElementById('preview').innerHTML = transform(getFileType(), getContent());
 
       {{previm_load_libraries}}
@@ -171,23 +171,23 @@
       // Settings code-lang
       if (getOptions().showCodeLanguage === 1) {
         Array.prototype.forEach.call(_doc.querySelectorAll('pre code'), function (item, index) {
-          const fileName = item.getAttribute('code-lang');
+          var fileName = item.getAttribute('code-lang');
           if (fileName) {
-            const codeLang = _doc.createElement('div');
+            var codeLang = _doc.createElement('div');
             codeLang.setAttribute('class','code-lang');
             codeLang.innerHTML = '<span class="bold">' + fileName + '</span>';
             item.parentNode.insertBefore(codeLang, item.parentNode.firstElementChild);
           }
         });
       }
-      Array.prototype.forEach.call(_doc.querySelectorAll('pre code'), hljs.highlightElement);
+      Array.prototype.forEach.call(_doc.querySelectorAll('pre code'), hljs.highlightBlock);
       autoScroll('body', beforePageYOffset);
       style_header();
     }
   }
 
-  const interval = _win.setInterval(function() {
-    const script = _doc.createElement('script');
+  var interval = _win.setInterval(function() {
+    var script = _doc.createElement('script');
 
     script.type = 'text/javascript';
     script.src = 'js/previm-function.js?t=' + new Date().getTime();
